@@ -1,10 +1,42 @@
 import requests
 from bs4 import BeautifulSoup
 
+from notatnik import User
+
+
+class User:
+    def __init__(self, name:str, location:str, posts:int, img_url:str):
+        self.name = name
+        self.location = location
+        self.posts = posts
+        self.img_url = img_url
+        self.coords = self.get_coordinates()
+
+    def get_coordinates(self):
+        import requests
+        from bs4 import BeautifulSoup
+        url: str = f'https://pl.wikipedia.org/wiki/{self.location}'
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                          'AppleWebKit/537.36 (KHTML, like Gecko) '
+                          'Chrome/122.0.0.0 Safari/537.36'
+        }
+        response = requests.get(url, headers=headers)
+        # print(response.text)
+        response_html = BeautifulSoup(response.text, 'html.parser')
+        # print(response_html.prettify())
+        latitude = float(response_html.select('.latitude')[1].text.replace(',', '.'))
+        longitude = float(response_html.select('.longitude')[1].text.replace(',', '.'))
+        # print(latitude, longitude)
+        return [latitude, longitude]
+
+
+    user_1 = User(name="Kasia", location="Warszawa", posts=3, img_url="")
+
 def user_info(users_data: list) -> None:
     print('Wybrano funkcje wyświetlania aktywności znajomych')
     for user in users_data:
-        print(f'Your user {user['name']}, from {user['location']}, has {user['posts']} posts.')
+        print(f'Your user {user.name}, from {user.location}, has {user.posts} posts.')
 
 def add_user(users_data: list) -> None:
     print('Wybrano funkcje dodawania znajomego')
@@ -12,49 +44,34 @@ def add_user(users_data: list) -> None:
     location: str = input('Enter your location: ')
     posts: int = int(input('Enter number of posts: '))
     img_url: str = input('Enter your image url: ')
-    users_data.append({'name': name, 'location': location, 'posts': posts, "img_url": img_url})
+    users_data.append(User(name=name, location=location, posts=posts, img_url=img_url))
     print('User added!')
 
 def remove_user(users_data: list) -> None:
     print('Wybrano funkcje usuwania znajomego')
     tmp_name: str = input('Enter your name: ')
     for user in users_data:
-        if user['name'] == tmp_name:
+        if user.name == tmp_name:
             users_data.remove(user)
 
 def update_user(users_data: list) -> None:
     print('Wybrano funkcje aktualizacji użytkownika')
     tmp_name: str = input('Enter old name: ')
     for user in users_data:
-        if user['name'] == tmp_name:
-            user['name'] = input('Enter new name: ')
-            user['location'] = input('Enter new location: ')
-            user['posts'] = input('Enter new amount of posts: ')
-def get_coordinates(city_name:str)->list:
-
-    url:str = f'https://pl.wikipedia.org/wiki/{city_name.lower()}'
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                      'AppleWebKit/537.36 (KHTML, like Gecko) '
-                      'Chrome/122.0.0.0 Safari/537.36'
-    }
-    response = requests.get(url, headers=headers)
-    # print(response.text)
-    response_html = BeautifulSoup(response.text, 'html.parser')
-    # print(response_html.prettify())
-    latitude = float(response_html.select('.latitude')[1].text.replace(',','.'))
-    longitude = float(response_html.select('.longitude')[1].text.replace(',','.'))
-    # print(latitude, longitude)
-    return [latitude, longitude]
+        if user.name == tmp_name:
+            user.name = input('Enter new name: ')
+            user.location = input('Enter new location: ')
+            user.posts = input('Enter new amount of posts: ')
+            user.coords = user.get_coordinates()
 
 def get_map(users_data:list)-> None:
     import folium
     m = folium.Map(location = [52.23 , 21.0], zoom_start = 6)
     for user in users_data:
          folium.Marker(
-             location=get_coordinates(user['location']),
+             location=user.coords,
              tooltip="Click me!",
-             popup=f"<h4> user: {user["name"]} </h4> {user["posts"]}, {user["location"]}, <img src = {user['img_url']}  alt = '1' />",
+             popup=f"<h4> user: {user.name} </h4> {user.posts}, {user.location}, <img src = {user.img_url}  alt = '1' />",
              icon=folium.Icon(icon="cloud"),
         ).add_to(m)
 
