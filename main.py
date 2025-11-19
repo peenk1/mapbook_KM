@@ -18,6 +18,7 @@ class User:
         self.posts = posts
         self.img_url = img_url
         self.coords = self.get_coordinates()
+        self.marker = map_widget.set_marker(self.coords[0], self.coords[1], text=self.name)
 
     def get_coordinates(self):
         import requests
@@ -58,8 +59,11 @@ def user_info(users_data: list):
     for idx,user in enumerate(users_data):
         listbox_lista_obiektow.insert(idx, f"{user.name} | {user.location} | {user.posts}")
 
+
+
 def delete_user(users_data: list):
     i = listbox_lista_obiektow.index(ACTIVE)
+    users_data[i].marker.delete()
     users_data.pop(i)
     user_info(users_data)
 
@@ -68,6 +72,8 @@ def user_details(users_data: list):
     label_imie_szczegoly_obiektu_wartosc.config(text=users_data[i].name)
     label_lokalizacja_szczegoly_obiektu.config(text=users_data[i].location)
     label_posty_szczegoly_obiektu_wartosc.config(text=users_data[i].posts)
+    map_widget.set_position(users_data[i].coords[0], users_data[i].coords[1])
+    map_widget.set_zoom(10)
 
 def edit_user(users_data: list):
     i = listbox_lista_obiektow.index(ACTIVE)
@@ -83,6 +89,12 @@ def update_user(users_data: list, i):
     users_data[i].location = entry_lokalizacja.get()
     users_data[i].posts = entry_posty.get()
     users_data[i].img_url = entry_img_url.get()
+
+    users_data[i].coords = users_data[i].get_coordinates()
+    users_data[i].marker.set_position(users_data[i].coords[0], users_data[i].coords[1])
+    users_data[i].marker.set_text(text = users_data[i].name)
+
+
     user_info(users_data)
 
     button_dodaj_obiekt.config(text="Dodaj obiekt", command=lambda:add_user(users))
