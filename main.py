@@ -1,12 +1,9 @@
 import tkintermapview
 from tkinter import *
 
-
-
 root = Tk()
 root.title("Mapbook")
 root.geometry("1025x760")
-
 
 ramka_lista_obiektow = Frame(root)
 ramka_formularz = Frame(root)
@@ -16,11 +13,11 @@ ramka_mapa = Frame(root)
 ramka_lista_obiektow.grid(row=0,column=0)
 ramka_formularz.grid(row=0,column=1)
 ramka_szczegoly_obiektow.grid(row=1,column=0)
-ramka_mapa.grid(row=2,column=0)
-
+ramka_mapa.grid(row=2,column=0, columnspan = 2)
 
 
 # RAMKA LISTA OBIEKTOW
+
 label_lista_obiektow = Label(ramka_lista_obiektow, text="Lista Obiektow")
 label_lista_obiektow.grid(row=0,column=0, columnspan=3)
 
@@ -37,9 +34,8 @@ button_edytuj_obiekt = Button(ramka_lista_obiektow, text="Edytuj Obiekt")
 button_edytuj_obiekt.grid(row=2,column=2)
 
 
-
-
 # RAMKA FORMULARZ
+
 label_formularz = Label(ramka_formularz, text="Formularz: ")
 label_formularz.grid(row=0,column=0, columnspan=2)
 
@@ -71,9 +67,8 @@ button_dodaj_obiekt = Button(ramka_formularz, text="Dodaj obiekt")
 button_dodaj_obiekt.grid(row=5,column=0, columnspan=2)
 
 
-
-
 # RAMKA SZCZEGOLY OBIEKTÓW
+
 label_szczegoly_obiektu = Label(ramka_szczegoly_obiektow, text="Szczegoly obiektu")
 label_szczegoly_obiektu.grid(row=0,column=0, sticky = W)
 
@@ -97,13 +92,11 @@ label_posty_szczegoly_obiektu_wartosc.grid(row=1,column=5)
 
 
 # RAMKA MAPY
+
 map_widget = tkintermapview.TkinterMapView(ramka_mapa, width=1025, height=600, corner_radius=0)
 map_widget.set_position(52.0, 21.0)
 map_widget.set_zoom(6)
 map_widget.grid(row=0, column=0)
-
-
-
 
 
 root.mainloop()
