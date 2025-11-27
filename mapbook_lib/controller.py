@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 
-from notatnik import User
 
 
 class User:
@@ -31,7 +30,7 @@ class User:
         return [latitude, longitude]
 
 
-    user_1 = User(name="Kasia", location="Warszawa", posts=3, img_url="")
+
 
 def user_info(users_data: list) -> None:
     print('Wybrano funkcje wyświetlania aktywności znajomych')
